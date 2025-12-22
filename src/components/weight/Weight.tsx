@@ -18,7 +18,7 @@ const weights = new Map<CircleSize, CircleWeight>([
 
 export const Weight = () => {
     const { circleWeights, setCircleWeights, enabled, currentToggle, setVoltage } = useApparateContext()
-    const { addPoint } = useChartContext('WEIGHT')
+    const { addPoint, clear } = useChartContext('WEIGHT')
     const { t } = useTranslation()
 
     const handleButtonClick = (size: CircleSize) => {
@@ -31,12 +31,16 @@ export const Weight = () => {
     };
 
     useEffect(() => {
+        if (!enabled) {
+            clear()
+        }
+
         if(circleWeights){
             handleButtonClick(circleWeights)
         } else if(currentToggle == 0) {
             setVoltage(0)
         }
-    }, [currentToggle, enabled])
+    }, [currentToggle, enabled, circleWeights])
 
     return (
         <div className={styles.wrapper}>

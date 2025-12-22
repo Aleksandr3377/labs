@@ -17,17 +17,20 @@ interface InternalChartState {
     pointIdStore: PointIdStore
 
     addPoint: (pointId: string, point: Point, chartType: ChartType) => void
+    clear: (chartType: ChartType) => void
 }
 
 export interface ChartState {
     data: Point[]
     addPoint: (pointId: string, point: Point) => void
+    clear: () => void
 }
 
 const ChartContext = createContext<InternalChartState>({
     dataStore: new Map(),
     pointIdStore: new Map(),
-    addPoint: () => { }
+    addPoint: () => { },
+    clear: () => { }
 })
 
 export interface ChartContextProviderProps {
@@ -71,6 +74,18 @@ export const ChartContextProvider = (props: ChartContextProviderProps) => {
                     )
                 )
             }
+        },
+        clear: (chartType: ChartType) => {
+            setPointIdStore(
+                pointIdStore => new Map<string, string[]>(
+                    [...pointIdStore, [chartType, []]]
+                )
+            )
+            setDataStore(
+                dataStore => new Map<string, Point[]>(
+                    [...dataStore, [chartType, []]]
+                )
+            )
         }
     }
     return (
@@ -88,6 +103,9 @@ export const useChartContext = (chartType: ChartType): ChartState => {
             data: internalState.dataStore.get(chartType) || [],
             addPoint: (pointId: string, point: Point) => {
                 internalState.addPoint(pointId, point, chartType)
+            },
+            clear: () => {
+                internalState.clear(chartType)
             }
         } satisfies ChartState
     }, [internalState.dataStore.get(chartType)])

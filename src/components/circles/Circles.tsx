@@ -19,7 +19,7 @@ const thermalSensorValues = new Map<ThermalSensorSize, ThermalSensorValue>([
 
 export const Circles = () => {
     const { setThermalSensorSize, setVoltage, thermalSensorSize, currentToggle, enabled } = useApparateContext()
-    const { addPoint } = useChartContext('PHOTORESISTOR')
+    const { addPoint, clear } = useChartContext('PHOTORESISTOR')
     const { t } = useTranslation()
 
     const handleButtonClick = (size: ThermalSensorSize) => {
@@ -32,12 +32,16 @@ export const Circles = () => {
     };
 
     useEffect(() => {
+        if (!enabled) {
+            clear()
+        }
+
         if(thermalSensorSize){
             handleButtonClick(thermalSensorSize)
         } else if(currentToggle == 3) {
             setVoltage(0)
         }
-    }, [currentToggle, enabled])
+    }, [currentToggle, enabled, thermalSensorSize])
 
     return (
         <div>
