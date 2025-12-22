@@ -1,0 +1,53 @@
+.container {
+  position: relative;
+  left: 180px;
+  top: 10px;
+  width: 52px;
+  height: 52px;
+  background-color: #9f9f9f;
+  border: 1px solid black;
+  border-radius: 6px;
+  transform: rotate(45deg);
+  margin: 20px;
+}
+
+.wrapper {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background-color: #5b5b5b;
+  border-radius: 50%;
+  left: 5px;
+  top: 5px;
+}
+
+.innerBox {
+  position: relative;
+  top: 5px;
+  left: 5px;
+  height: 20px;
+  width: 20px;
+  border: 5px dotted black;
+  border-radius: 50%;
+}
+
+.btnContainer {
+  position: relative;
+  top: -60px;
+  left: 30px;
+  height: 50px;
+  width: 50px;
+  border: 1px solid black;
+  background: rgb(121,119,119);
+  background: linear-gradient(90deg, rgba(121,119,119,0.835171568627451) 0%, rgba(213,207,201,1) 92%);
+}
+
+.text {
+  position: relative;
+  bottom: 35px;
+  width: fit-content;
+  border: 1px solid black;
+  background-color: #f6e8dc;
+  padding: 3px;
+  margin: 0 auto;
+}

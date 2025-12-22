@@ -1,0 +1,32 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.title {
+    font-size: 40px;
+}
+
+.languages {
+    display: flex;
+    width: 70px;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 50px;
+    cursor: pointer;
+}
+
+.activeLang {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 130%;
+    align-self: center;
+}
+
+.notActiveLAng {
+    font-size: 18px;
+    font-weight: 500;
+    opacity: 0.2;
+    align-self: center;
+}

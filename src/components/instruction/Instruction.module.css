@@ -1,0 +1,28 @@
+/* Instruction.module.css */
+
+.main {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 32px;
+  background-color: #f9fafa;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.7;
+  color: #2c3e50;
+}
+
+.header {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #1a1a1a;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 12px;
+}
+
+p {
+  font-size: 18px;
+  margin-bottom: 16px;
+}

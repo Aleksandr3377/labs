@@ -1,0 +1,36 @@
+.pin {
+  position: absolute;
+  top: 50%; right: 50%;
+  transform: translate(50%,-50%);
+
+  width: 80px;
+  height: 80px;
+  background-color: #816666;
+  border-radius: 50%;
+  border: 1px solid black;
+  text-align: center;
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pin.pin--small {
+  width: 80px;
+  height: 80px;
+}
+
+.pin.pin--medium {
+  width: 84px;
+  height: 84px;
+}
+
+.pin.pin--big {
+  width: 87px;
+  height: 87px;
+}
+
+.pin.pin--biggest {
+  width: 90px;
+  height: 90px;
+}

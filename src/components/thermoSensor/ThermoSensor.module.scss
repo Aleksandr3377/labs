@@ -1,0 +1,85 @@
+.title {
+  width: max-content;
+  margin: 30px auto;
+}
+
+.wrapper {
+  height: 430px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pot {
+  height: 200px;
+  width: 130px;
+  background-color: #ced8e3;
+  opacity: 0.7;
+  border: 1px solid #757474;
+}
+
+.water {
+  position: relative;
+  top: -135px;
+  height: 135px;
+  width: 132px;
+  background-color: #5fa6f6;
+  z-index: -1;
+}
+
+.stove {
+  position: relative;
+  top: -310px;
+  width: 160px;
+  height: 50px;
+  background-color: #5e5e5e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background-color: red;
+  border-radius: 50%;
+  font-size: 10px;
+}
+
+.thermometer {
+  position: relative;
+  top: -300px;
+  left: 200px;
+  height: 175px;
+  width: 80px;
+  background-color: #9b9b9b;
+}
+
+.scaleWrapper {
+  position: relative;
+  left: 50px;
+  top: -140px;
+  height: 140px;
+  width: 4px;
+  background-color: #4b4747;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.scale {
+  position: relative;
+  width: 4px;
+  background-color: #ff0000;
+  z-index: 1;
+}
+
+.degrees {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-top: 20px;
+  padding-left: 10px;
+}

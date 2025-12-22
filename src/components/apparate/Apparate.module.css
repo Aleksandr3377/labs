@@ -1,0 +1,27 @@
+.main {
+    width: 950px;
+    height: 400px;
+    background: #dedede;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: space-around;
+    padding: 25px;
+    margin: 50px auto;
+    border: 5px solid black;
+  }
+  
+  .title {
+    width: fit-content;
+    font-size: 50px;
+    margin: 0 auto;
+  }
+  
+  .sensor {
+    height: 150px;
+    border: 3px solid black;
+    width: calc(32% - 10px);
+    margin: 5px;
+  }
+  

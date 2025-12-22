@@ -1,0 +1,47 @@
+{
+  "mainTitle": {
+    "title": "Sensors of medical and biological information"
+  },
+  "instruction": {
+    "header": "Instructions for use",
+    "paragraph1": "Before starting work, you need to turn on the layout by pressing the button under the layout, changing its state from <Off> to <On>, then we can choose what exactly we need for testing (strain sensor, temperature sensor or photoresistor).",
+    "paragraph2": "To launch the load cell window, we select the number 1 by clicking on the gray rectangular handle in the <Sensor Selection> window of the layout, then select the load cell under the layout and select the weight of the load cell.",
+    "paragraph3": "To launch the thermal sensor window, we select the number 2 by clicking on the gray rectangular handle in the <Sensor Selection> window of the layout, then select the thermal sensor under the layout and click <Start>, wait a few seconds, after which the graph is built.",
+    "paragraph4": "To launch the photoresistor window, we select the number 4 by clicking on the gray rectangular handle in the <Sensor Selection> window of the layout, then select the photoresistor under the layout, select the area of ​​the circle.",
+    "paragraph5": "To reset all results and repeat the experiment, you need to reload the page."
+  },
+  "model": {
+    "strainGauge": "Strain gauge",
+    "thermoSensor": "Thermo sensor",
+    "capacitiveSensor": "Capacitive sensor",
+    "photoresistor": "Photoresistor",
+    "sensorSelection": "Select sensor"
+  },
+  "connectModel": {
+    "title": "Connect the layout to the network",
+    "off": "On",
+    "on": "Off"
+  },
+  "weightTitle": {
+    "title": "Choose the weight"
+  },
+  "thermosensorTitle": {
+    "title": "Water heating"
+  },
+  "photoresistorTitle": {
+    "title": "Select the area of the circle"
+  },
+  "table": {
+    "voltage": "Voltage",
+    "weight": "Weight",
+    "temperature": "Temperature",
+    "square": "Square"
+  },
+  "chart": {
+    "voltage": "Voltage"
+  },
+  "waterHeating": {
+    "start": "Start",
+    "stop": "Stop"
+  }
+}
