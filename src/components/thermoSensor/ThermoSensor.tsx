@@ -6,17 +6,22 @@ import {useTranslation} from "react-i18next";
 
 export const ThermoSensor = () => {
     const {enabled, currentToggle, setVoltage} = useApparateContext()
-    const {addPoint} = useChartContext('THERMOSENSOR')
+    const {addPoint, clear} = useChartContext('THERMOSENSOR')
     const [buttonState, setButtonState] = useState(false)
     const [temperature, setTemperature] = useState(18)
     const indicator = useRef<HTMLDivElement>(null)
     const { t } = useTranslation()
 
     useEffect(() => {
-        if (!enabled || currentToggle !== 1) {
+        if (!enabled) {
+            clear()
+            setTemperature(18)
+        }
+
+        if (!enabled || currentToggle != 1) {
             setButtonState(false)
         }
-    }, [enabled, currentToggle])
+    }, [enabled, currentToggle, buttonState])
 
     useEffect(() => {
         let intervalId: ReturnType<typeof setInterval> | undefined
@@ -35,17 +40,14 @@ export const ThermoSensor = () => {
     useEffect(() => {
         if (temperature >= 55) {
             setButtonState(false)
-            return
+        } else if (temperature >= 30) {
+            const currentVoltage = temperature * 1.25
+            setVoltage(currentVoltage)
+            addPoint(`${temperature}:${currentVoltage}`, {
+                x: parseFloat(temperature.toFixed(1)), y: currentVoltage
+            })
         }
-
-        if (temperature >= 30) {
-            const x = Number(temperature.toFixed(1))
-            const y = Number((temperature * 1.25).toFixed(2))
-
-            setVoltage(y)
-            addPoint(`${x}:${y}`, { x, y })
-        }
-    }, [temperature, addPoint, setVoltage])
+    }, [temperature])
 
     return (
         <div className={styles.wrapper}>
