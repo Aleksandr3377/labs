@@ -6,13 +6,18 @@ import {useTranslation} from "react-i18next";
 
 export const ThermoSensor = () => {
     const {enabled, currentToggle, setVoltage} = useApparateContext()
-    const {addPoint} = useChartContext('THERMOSENSOR')
+    const {addPoint, clear} = useChartContext('THERMOSENSOR')
     const [buttonState, setButtonState] = useState(false)
     const [temperature, setTemperature] = useState(18)
     const indicator = useRef<HTMLDivElement>(null)
     const { t } = useTranslation()
 
     useEffect(() => {
+        if (!enabled) {
+            clear()
+            setTemperature(18)
+        }
+
         if (!enabled || currentToggle != 1) {
             setButtonState(false)
         }
