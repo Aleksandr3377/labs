@@ -1,90 +1,64 @@
-import { createContext, useContext, useState } from "react"
+// ApparateContext.tsx
+import React, { createContext, useContext, useState } from "react"
 
-const ThermalSensorSizes = [
-    'SMALL',
-    'MEDIUM',
-    'LARGE'
-] as const
+const ThermalSensorSizes = ["SMALL", "MEDIUM", "LARGE"] as const
+const CircleSizes = ["SMALL", "MEDIUM", "BIG", "BIGGEST"] as const
 
-const CircleSizes = [
-    'SMALL',
-    'MEDIUM',
-    'BIG',
-    'BIGGEST',
-] as const
-
-export type ThermalSensorSize = typeof ThermalSensorSizes[number] | null
-export type CircleSize = typeof CircleSizes[number] | null
+export type ThermalSensorSize = (typeof ThermalSensorSizes)[number] | null
+export type CircleSize = (typeof CircleSizes)[number] | null
 
 export interface ApparateState {
     enabled: boolean
-    setEnabled: (enabled: boolean) => void
+    setEnabled: React.Dispatch<React.SetStateAction<boolean>>
 
     voltage: number
-    setVoltage: (voltage: number) => void
+    setVoltage: React.Dispatch<React.SetStateAction<number>>
 
     currentToggle: number
-    setCurrentToggle: (currentToggle: number) => void
+    setCurrentToggle: React.Dispatch<React.SetStateAction<number>>
 
     thermalSensorSize: ThermalSensorSize
-    setThermalSensorSize: (thermalSensorSize: ThermalSensorSize) => void
+    setThermalSensorSize: React.Dispatch<React.SetStateAction<ThermalSensorSize>>
 
     circleWeights: CircleSize
-    setCircleWeights: (circleWeights: CircleSize) => void
+    setCircleWeights: React.Dispatch<React.SetStateAction<CircleSize>>
 }
 
-const ApparateContext = createContext<ApparateState>({
-    enabled: false,
-    setEnabled: () => {},
-
-    voltage: 0,
-    setVoltage: () => {},
-
-    currentToggle: 0,
-    setCurrentToggle: () => {},
-
-    thermalSensorSize: null,
-    setThermalSensorSize: () => {},
-
-    circleWeights: null,
-    setCircleWeights: () => {},
-})
+const ApparateContext = createContext<ApparateState | null>(null)
 
 export interface ApparateContextProviderProps {
     children: React.ReactNode
 }
 
-export const ApparateContextProvider = (props: ApparateContextProviderProps) => {
-    const [enabled, setEnabled] = useState(false)
-    const [voltage, setVoltage] = useState(0)
-    const [currentToggle, setCurrentToggle] = useState(0)
+export const ApparateContextProvider = ({ children }: ApparateContextProviderProps) => {
+    const [enabled, setEnabled] = useState<boolean>(false)
+    const [voltage, setVoltage] = useState<number>(0)
+    const [currentToggle, setCurrentToggle] = useState<number>(0)
     const [thermalSensorSize, setThermalSensorSize] = useState<ThermalSensorSize>(null)
     const [circleWeights, setCircleWeights] = useState<CircleSize>(null)
 
-    const value: ApparateState = { 
+    const value: ApparateState = {
         enabled,
         setEnabled,
 
-        voltage, 
-        setVoltage, 
+        voltage,
+        setVoltage,
 
-        currentToggle, 
-        setCurrentToggle, 
+        currentToggle,
+        setCurrentToggle,
 
-        thermalSensorSize, 
+        thermalSensorSize,
         setThermalSensorSize,
 
         circleWeights,
         setCircleWeights,
     }
 
-    return (
-        <ApparateContext.Provider value={value}>
-            {props.children}
-        </ApparateContext.Provider>
-    )
+    return <ApparateContext.Provider value={value}>{children}</ApparateContext.Provider>
 }
 
-export const useApparateContext = () => {
-    return useContext(ApparateContext)
+export const useApparateContext = (): ApparateState => {
+    const ctx = useContext(ApparateContext)
+    if (!ctx) throw new Error("useApparateContext must be used inside <ApparateContextProvider>")
+    return ctx
 }
