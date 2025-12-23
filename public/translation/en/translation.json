@@ -32,13 +32,12 @@
     "title": "Select the area of the circle"
   },
   "table": {
-    "voltage": "Voltage",
     "weight": "Weight",
-    "temperature": "Temperature",
-    "square": "Square"
+    "voltage": "Voltage",
+    "average": "Average"
   },
   "chart": {
-    "voltage": "Voltage"
+    "regression_line": "Regression line"
   },
   "waterHeating": {
     "start": "Start",

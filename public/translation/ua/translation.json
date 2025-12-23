@@ -32,13 +32,12 @@
     "title": "Оберіть площу круга"
   },
   "table": {
-    "voltage": "Вольтаж",
     "weight": "Вага",
-    "temperature": "Температура",
-    "square": "Площа"
+    "voltage": "Вольтаж",
+    "average": "Середнє"
   },
   "chart": {
-    "voltage": "Напруга"
+    "regression_line": "Лінія регресії"
   },
   "waterHeating": {
     "start": "Старт",
