@@ -1,145 +1,121 @@
 import { Point } from "chart.js";
 import { createContext, useContext, useMemo, useState } from "react";
 
-const ChartTypes = [
-    'PHOTORESISTOR',
-    'WEIGHT',
-    'THERMOSENSOR',
-] as const
+const ChartTypes = ['PHOTORESISTOR', 'WEIGHT', 'THERMOSENSOR'] as const;
 
-export type ChartType = typeof ChartTypes[number]
+export type ChartType = typeof ChartTypes[number];
 
-// Identify if point is already added into store
-type PointIdStore = Map<string, string[]>
+// Определение структуры данных
+type PointIdStore = Record<string, string[]>;
 
 interface InternalChartState {
-    dataStore: Map<string, Point[]>
-    pointIdStore: PointIdStore
+    dataStore: Record<string, Point[]>;
+    pointIdStore: PointIdStore;
 
-    addPoint: (pointId: string, point: Point, chartType: ChartType) => void
-    clear: (chartType: ChartType) => void
+    addPoint: (pointId: string, point: Point, chartType: ChartType) => void;
+    clear: (chartType: ChartType) => void;
 }
 
 export interface ChartState {
-    data: Point[]
-    regressionData: Point[]
-    addPoint: (pointId: string, point: Point) => void
-    clear: () => void
+    data: Point[];
+    regressionData: Point[];
+    addPoint: (pointId: string, point: Point) => void;
+    clear: () => void;
 }
 
 const ChartContext = createContext<InternalChartState>({
-    dataStore: new Map(),
-    pointIdStore: new Map(),
-    addPoint: () => { },
-    clear: () => { }
-})
+    dataStore: {},
+    pointIdStore: {},
+    addPoint: () => {},
+    clear: () => {},
+});
 
 export interface ChartContextProviderProps {
-    children: React.ReactNode
+    children: React.ReactNode;
 }
 
-export const ChartContextProvider = (props: ChartContextProviderProps) => {
-    const [dataStore, setDataStore] = useState<Map<string, Point[]>>(new Map())
-    const [pointIdStore, setPointIdStore] = useState<PointIdStore>(new Map())
+export const ChartContextProvider = ({ children }: ChartContextProviderProps) => {
+    const [dataStore, setDataStore] = useState<Record<string, Point[]>>({});
+    const [pointIdStore, setPointIdStore] = useState<PointIdStore>({});
+
     const value: InternalChartState = {
         dataStore,
         pointIdStore,
+
         addPoint: (pointId: string, point: Point, chartType: ChartType) => {
-            if (!pointIdStore.has(chartType)) {
-                setPointIdStore(
-                    pointIdStore => new Map<string, string[]>(
-                        [...pointIdStore, [chartType, []]]
-                    )
-                )
-            }
-            if (!dataStore.has(chartType)) {
-                setDataStore(
-                    dataStore => new Map<string, Point[]>(
-                        [...dataStore, [chartType, []]]
-                    )
-                )
-            }
+            setPointIdStore((prev) => ({
+                ...prev,
+                [chartType]: prev[chartType]
+                    ? [...new Set([...prev[chartType], pointId])]
+                    : [pointId],
+            }));
 
-            const chartPointIds = pointIdStore.get(chartType) || []
-            const chartData = dataStore.get(chartType) || []
-
-            if(!chartPointIds.includes(pointId)) {
-                setPointIdStore(
-                    pointIdStore => new Map<string, string[]>(
-                        [...pointIdStore, [chartType, [...chartPointIds, pointId]]]
-                    )
-                )
-                setDataStore(
-                    dataStore => new Map<string, Point[]>(
-                        [...dataStore, [chartType, [...chartData, point].sort((a, b) => a.x - b.x)]]
-                    )
-                )
-            }
+            setDataStore((prev) => {
+                const updatedPoints = prev[chartType]
+                    ? [...prev[chartType], point].sort((a, b) => a.x - b.x)
+                    : [point];
+                return { ...prev, [chartType]: updatedPoints };
+            });
         },
+
         clear: (chartType: ChartType) => {
-            setPointIdStore(
-                pointIdStore => new Map<string, string[]>(
-                    [...pointIdStore, [chartType, []]]
-                )
-            )
-            setDataStore(
-                dataStore => new Map<string, Point[]>(
-                    [...dataStore, [chartType, []]]
-                )
-            )
-        }
-    }
+            setPointIdStore((prev) => ({ ...prev, [chartType]: [] }));
+            setDataStore((prev) => ({ ...prev, [chartType]: [] }));
+        },
+    };
+
     return (
-        <ChartContext.Provider value={value}>
-            {props.children}
-        </ChartContext.Provider>
-    )
-}
+        <ChartContext.Provider value={value}>{children}</ChartContext.Provider>
+    );
+};
 
 export const useChartContext = (chartType: ChartType): ChartState => {
-    const internalState = useContext(ChartContext)
+    const internalState = useContext(ChartContext);
 
+    // Рассчитать регрессионную линию
     const regressionData = useMemo(() => {
-        const points = internalState.dataStore.get(chartType) || [];
+        const points = internalState.dataStore[chartType] || [];
         if (points.length < 2) return [];
 
         const n = points.length;
-        let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+        let sumX = 0,
+            sumY = 0,
+            sumXY = 0,
+            sumX2 = 0;
 
-        points.forEach(p => {
+        points.forEach((p) => {
             sumX += p.x;
             sumY += p.y;
             sumXY += p.x * p.y;
             sumX2 += p.x * p.x;
         });
 
-        const denominator = (n * sumX2 - sumX * sumX);
-        if (denominator === 0) return [];
+        const divisor = n * sumX2 - sumX * sumX;
+        if (divisor === 0) return [];
 
-        const slope = (n * sumXY - sumX * sumY) / denominator;
+        const slope = (n * sumXY - sumX * sumY) / divisor;
         const intercept = (sumY - slope * sumX) / n;
 
-        const minX = Math.min(...points.map(p => p.x));
-        const maxX = Math.max(...points.map(p => p.x));
+        const minX = Math.min(...points.map((p) => p.x));
+        const maxX = Math.max(...points.map((p) => p.x));
 
         return [
             { x: minX, y: slope * minX + intercept },
-            { x: maxX, y: slope * maxX + intercept }
+            { x: maxX, y: slope * maxX + intercept },
         ];
-    }, [internalState.dataStore.get(chartType)]);
+    }, [internalState.dataStore[chartType]]);
 
-    const mappedState = useMemo(() => {
-        return {
-            data: internalState.dataStore.get(chartType) || [],
+    return useMemo(
+        () => ({
+            data: internalState.dataStore[chartType] || [],
             regressionData,
             addPoint: (pointId: string, point: Point) => {
-                internalState.addPoint(pointId, point, chartType)
+                internalState.addPoint(pointId, point, chartType);
             },
             clear: () => {
-                internalState.clear(chartType)
-            }
-        } satisfies ChartState
-    }, [internalState.dataStore.get(chartType), regressionData])
-
-    return mappedState
-}
+                internalState.clear(chartType);
+            },
+        }),
+        [internalState, regressionData, chartType]
+    );
+};
