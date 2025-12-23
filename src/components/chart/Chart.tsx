@@ -23,6 +23,23 @@ export const Chart = ({ type, label, xAxisLabel }: ChartProps) => {
                         {
                             label,
                             data: state.data.map((p) => p.y),
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1
+                        },
+                        {
+                            label: t("chart.regression_line") || "Усереднена пряма",
+                            data: state.data.map(p => {
+                                if (state.regressionData.length < 2) return null;
+                                const p1 = state.regressionData[0];
+                                const p2 = state.regressionData[1];
+                                // Розраховуємо Y для поточного X за формулою прямої
+                                return p1.y + (p.x - p1.x) * (p2.y - p1.y) / (p2.x - p1.x);
+                            }),
+                            borderColor: 'rgba(255, 99, 132, 0.7)',
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false,
+                            showLine: true
                         },
                     ],
                 }}

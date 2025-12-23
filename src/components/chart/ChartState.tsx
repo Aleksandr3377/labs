@@ -22,6 +22,7 @@ interface InternalChartState {
 
 export interface ChartState {
     data: Point[]
+    regressionData: Point[]
     addPoint: (pointId: string, point: Point) => void
     clear: () => void
 }
@@ -98,9 +99,39 @@ export const ChartContextProvider = (props: ChartContextProviderProps) => {
 export const useChartContext = (chartType: ChartType): ChartState => {
     const internalState = useContext(ChartContext)
 
+    const regressionData = useMemo(() => {
+        const points = internalState.dataStore.get(chartType) || [];
+        if (points.length < 2) return [];
+
+        const n = points.length;
+        let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+
+        points.forEach(p => {
+            sumX += p.x;
+            sumY += p.y;
+            sumXY += p.x * p.y;
+            sumX2 += p.x * p.x;
+        });
+
+        const denominator = (n * sumX2 - sumX * sumX);
+        if (denominator === 0) return [];
+
+        const slope = (n * sumXY - sumX * sumY) / denominator;
+        const intercept = (sumY - slope * sumX) / n;
+
+        const minX = Math.min(...points.map(p => p.x));
+        const maxX = Math.max(...points.map(p => p.x));
+
+        return [
+            { x: minX, y: slope * minX + intercept },
+            { x: maxX, y: slope * maxX + intercept }
+        ];
+    }, [internalState.dataStore.get(chartType)]);
+
     const mappedState = useMemo(() => {
         return {
             data: internalState.dataStore.get(chartType) || [],
+            regressionData,
             addPoint: (pointId: string, point: Point) => {
                 internalState.addPoint(pointId, point, chartType)
             },
@@ -108,7 +139,7 @@ export const useChartContext = (chartType: ChartType): ChartState => {
                 internalState.clear(chartType)
             }
         } satisfies ChartState
-    }, [internalState.dataStore.get(chartType)])
+    }, [internalState.dataStore.get(chartType), regressionData])
 
     return mappedState
 }
