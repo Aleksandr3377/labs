@@ -1,17 +1,12 @@
-// ChartState.ts
 import { Point } from "chart.js"
 import React, { createContext, useContext, useState } from "react"
 
 const ChartTypes = ["PHOTORESISTOR", "WEIGHT", "THERMOSENSOR"] as const
 export type ChartType = (typeof ChartTypes)[number]
 
-// point ids per chart
-type PointIdStore = Map<ChartType, string[]>
-
 interface InternalChartState {
     dataStore: Map<ChartType, Point[]>
-    pointIdStore: PointIdStore
-    addPoint: (pointId: string, point: Point, chartType: ChartType) => void
+    addPoint: (_pointId: string, point: Point, chartType: ChartType) => void
 }
 
 export interface ChartState {
@@ -19,60 +14,51 @@ export interface ChartState {
     addPoint: (pointId: string, point: Point) => void
 }
 
+const MAX_LAST_RESULTS = 4
+
 const ChartContext = createContext<InternalChartState>({
     dataStore: new Map(),
-    pointIdStore: new Map(),
     addPoint: () => {},
 })
 
-export interface ChartContextProviderProps {
-    children: React.ReactNode
-}
-
-export const ChartContextProvider = ({ children }: ChartContextProviderProps) => {
+export const ChartContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [dataStore, setDataStore] = useState<Map<ChartType, Point[]>>(new Map())
-    const [pointIdStore, setPointIdStore] = useState<PointIdStore>(new Map())
 
-    const addPoint = (pointId: string, point: Point, chartType: ChartType) => {
-        // 1) ids: обновляем от prev (без гонок), не даём дубликатов
-        setPointIdStore((prev) => {
-            const next = new Map(prev)
-            const ids = next.get(chartType) ?? []
-            if (ids.includes(pointId)) return prev
-            next.set(chartType, [...ids, pointId])
-            return next
-        })
-
-        // 2) data: обновляем от prev (без гонок), добавляем и сортируем по x
+    const addPoint = (_pointId: string, point: Point, chartType: ChartType) => {
         setDataStore((prev) => {
             const next = new Map(prev)
             const data = next.get(chartType) ?? []
 
-            // ВАЖНО: сортируем по числовому x
-            const sorted = [...data, point].sort((a, b) => Number(a.x) - Number(b.x))
+            const x = Number(point.x)
+            const y = Number(point.y)
 
-            next.set(chartType, sorted)
+            // ✅ WEIGHT: один вес (x) -> одна точка. Всегда обновляем/перезаписываем.
+            if (chartType === "WEIGHT") {
+                const idx = data.findIndex((p) => Number(p.x) === x)
+
+                const newData =
+                    idx >= 0 ? data.map((p, i) => (i === idx ? { x, y } : p)) : [...data, { x, y }]
+
+                next.set(chartType, [...newData].sort((a, b) => Number(a.x) - Number(b.x)))
+                return next
+            }
+
+            // ✅ Остальные: не добавляем подряд одинаковое, храним последние 4
+            const last = data[data.length - 1]
+            if (last && Number(last.x) === x && Number(last.y) === y) return prev
+
+            next.set(chartType, [...data, { x, y }].slice(-MAX_LAST_RESULTS))
             return next
         })
     }
 
-    const value: InternalChartState = {
-        dataStore,
-        pointIdStore,
-        addPoint,
-    }
-
-    return <ChartContext.Provider value={value}>{children}</ChartContext.Provider>
+    return <ChartContext.Provider value={{ dataStore, addPoint }}>{children}</ChartContext.Provider>
 }
 
 export const useChartContext = (chartType: ChartType): ChartState => {
-    const internalState = useContext(ChartContext)
-
-    // ВАЖНО: без useMemo — чтобы всегда обновлялось при изменении контекста
+    const internal = useContext(ChartContext)
     return {
-        data: internalState.dataStore.get(chartType) ?? [],
-        addPoint: (pointId: string, point: Point) => {
-            internalState.addPoint(pointId, point, chartType)
-        },
+        data: internal.dataStore.get(chartType) ?? [],
+        addPoint: (pointId: string, point: Point) => internal.addPoint(pointId, point, chartType),
     }
 }

@@ -13,10 +13,10 @@ export const ThermoSensor = () => {
     const { t } = useTranslation()
 
     useEffect(() => {
-        if (!enabled || currentToggle != 1) {
+        if (!enabled || currentToggle !== 1) {
             setButtonState(false)
         }
-    }, [enabled, currentToggle, buttonState])
+    }, [enabled, currentToggle])
 
     useEffect(() => {
         let intervalId: ReturnType<typeof setInterval> | undefined
@@ -35,14 +35,17 @@ export const ThermoSensor = () => {
     useEffect(() => {
         if (temperature >= 55) {
             setButtonState(false)
-        } else if (temperature >= 30) {
-            const currentVoltage = temperature * 1.25
-            setVoltage(currentVoltage)
-            addPoint(`${temperature}:${currentVoltage}`, {
-                x: parseFloat(temperature.toFixed(1)), y: currentVoltage
-            })
+            return
         }
-    }, [temperature])
+
+        if (temperature >= 30) {
+            const x = Number(temperature.toFixed(1))
+            const y = Number((temperature * 1.25).toFixed(2))
+
+            setVoltage(y)
+            addPoint(`${x}:${y}`, { x, y })
+        }
+    }, [temperature, addPoint, setVoltage])
 
     return (
         <div className={styles.wrapper}>
