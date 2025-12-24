@@ -1,8 +1,8 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react'; // Убрали useCallback
 import styles from './Circles.module.scss';
 import { ThermalSensorSize, useApparateContext } from '../apparate';
 import { useChartContext } from '../chart';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 // import formatters from "chart.js/dist/core/core.ticks";
 // import values = formatters.values;
 
@@ -18,14 +18,14 @@ const thermalSensorValues = new Map<ThermalSensorSize, ThermalSensorValue>([
 ])
 
 export const Circles = () => {
-    const { setThermalSensorSize, setVoltage, thermalSensorSize, currentToggle, enabled } = useApparateContext()
+    // Убрали thermalSensorSize из списка ниже
+    const { setThermalSensorSize, setVoltage, currentToggle, enabled } = useApparateContext()
     const { addPoint, clear } = useChartContext('PHOTORESISTOR')
     const { t } = useTranslation()
 
-    // Оборачиваем в useCallback, чтобы функция не пересоздавалась при каждом рендере
-    const handleButtonClick = useCallback((size: ThermalSensorSize) => {
+    const handleButtonClick = (size: ThermalSensorSize) => {
         setThermalSensorSize(size)
-        if(currentToggle == 3 && enabled) {
+        if(currentToggle === 3 && enabled) {
             const baseValue = thermalSensorValues.get(size)!
             const noise = (Math.random() - 0.5);
             const finalVoltage = parseFloat((baseValue.voltage + noise).toFixed(1));
@@ -33,19 +33,15 @@ export const Circles = () => {
             setVoltage(finalVoltage)
             addPoint(`${baseValue.s}:${finalVoltage}`, { x: baseValue.s, y: finalVoltage })
         }
-    }, [currentToggle, enabled, setThermalSensorSize, setVoltage, addPoint]);
+    };
 
     useEffect(() => {
         if (!enabled) {
             clear()
         }
+    }, [enabled, clear])
 
-        if(thermalSensorSize){
-            handleButtonClick(thermalSensorSize)
-        } else if(currentToggle == 3) {
-            setVoltage(0)
-        }
-    }, [currentToggle, enabled, thermalSensorSize, clear, handleButtonClick, setVoltage]) // Добавили все зависимости
+
 
     return (
         <div>
