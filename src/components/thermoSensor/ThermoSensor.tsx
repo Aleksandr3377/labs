@@ -21,7 +21,7 @@ export const ThermoSensor = () => {
         if (!enabled || currentToggle != 1) {
             setButtonState(false)
         }
-    }, [enabled, currentToggle, buttonState])
+    }, [enabled, currentToggle, buttonState, clear])
 
     useEffect(() => {
         let intervalId: ReturnType<typeof setInterval> | undefined
@@ -41,13 +41,14 @@ export const ThermoSensor = () => {
         if (temperature >= 55) {
             setButtonState(false)
         } else if (temperature >= 30) {
-            const currentVoltage = temperature * 1.25
+            const noise = (Math.random() - 0.5);
+            const currentVoltage = temperature * 1.25 + noise;
             setVoltage(currentVoltage)
             addPoint(`${temperature}:${currentVoltage}`, {
                 x: parseFloat(temperature.toFixed(1)), y: currentVoltage
             })
         }
-    }, [temperature])
+    }, [temperature, setVoltage, addPoint])
 
     return (
         <div className={styles.wrapper}>
@@ -80,8 +81,14 @@ export const ThermoSensor = () => {
                     <button
                         className={styles.button}
                         onClick={() => {
-                            if (temperature == 18) {
-                                setButtonState((value) => !value)
+                            if (!buttonState) {
+                                // Если процесс завершен (температура >= 55), сбрасываем её для нового цикла
+                                if (temperature >= 55) {
+                                    setTemperature(18);
+                                }
+                                setButtonState(true);
+                            } else {
+                                setButtonState(false);
                             }
                         }}>
                         {buttonState ? t("waterHeating.stop") : t("waterHeating.start")}
