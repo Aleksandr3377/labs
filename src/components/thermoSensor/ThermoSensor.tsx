@@ -28,14 +28,14 @@ export const ThermoSensor = () => {
 
         if (buttonState) {
             intervalId = setInterval(() => {
-                setTemperature(temperature => temperature + Math.floor(Math.random() * 2) + 1);
+                setTemperature(prev => prev + Math.floor(Math.random() * 2) + 1);
             }, 1000)
         }
 
         return () => {
             if (intervalId) clearInterval(intervalId)
         }
-    }, [buttonState])
+    }, [buttonState]) // Зависим только от состояния кнопки
 
     useEffect(() => {
         if (temperature >= 55) {
@@ -43,12 +43,16 @@ export const ThermoSensor = () => {
         } else if (temperature >= 30) {
             const noise = (Math.random() - 0.5);
             const currentVoltage = temperature * 1.25 + noise;
+
+            // Вызываем функции напрямую, не добавляя их в []
             setVoltage(currentVoltage)
             addPoint(`${temperature}:${currentVoltage}`, {
                 x: parseFloat(temperature.toFixed(1)), y: currentVoltage
             })
         }
-    }, [temperature, setVoltage, addPoint])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [temperature]) // Срабатывает только при изменении температуры
+
 
     return (
         <div className={styles.wrapper}>
