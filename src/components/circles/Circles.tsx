@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect } from 'react'; // Убрали useCallback
 import styles from './Circles.module.scss';
 import { ThermalSensorSize, useApparateContext } from '../apparate';
 import { useChartContext } from '../chart';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 // import formatters from "chart.js/dist/core/core.ticks";
 // import values = formatters.values;
 
@@ -12,22 +12,26 @@ type ThermalSensorValue = {
 }
 
 const thermalSensorValues = new Map<ThermalSensorSize, ThermalSensorValue>([
-    ['LARGE', {s: 491, voltage: Math.floor(Math.random() * 5) + 53 }],
-    ['MEDIUM', {s: 380, voltage: Math.floor(Math.random() * 10) + 41 }],
-    ['SMALL', {s: 177, voltage: Math.floor(Math.random() * 9) + 32 }],
+    ['LARGE', {s: 491, voltage: 57}],
+    ['MEDIUM', {s: 380, voltage: 49}],
+    ['SMALL', {s: 177, voltage: 32}],
 ])
 
 export const Circles = () => {
-    const { setThermalSensorSize, setVoltage, thermalSensorSize, currentToggle, enabled } = useApparateContext()
+    // Убрали thermalSensorSize из списка ниже
+    const { setThermalSensorSize, setVoltage, currentToggle, enabled } = useApparateContext()
     const { addPoint, clear } = useChartContext('PHOTORESISTOR')
     const { t } = useTranslation()
 
     const handleButtonClick = (size: ThermalSensorSize) => {
         setThermalSensorSize(size)
-        if(currentToggle == 3 && enabled) {
-            const value = thermalSensorValues.get(size)!
-            setVoltage(value.voltage)
-            addPoint(value.s.toString(), { x: value.s, y: value.voltage })
+        if(currentToggle === 3 && enabled) {
+            const baseValue = thermalSensorValues.get(size)!
+            const noise = (Math.random() - 0.5);
+            const finalVoltage = parseFloat((baseValue.voltage + noise).toFixed(1));
+
+            setVoltage(finalVoltage)
+            addPoint(`${baseValue.s}:${finalVoltage}`, { x: baseValue.s, y: finalVoltage })
         }
     };
 
@@ -35,13 +39,9 @@ export const Circles = () => {
         if (!enabled) {
             clear()
         }
+    }, [enabled, clear])
 
-        if(thermalSensorSize){
-            handleButtonClick(thermalSensorSize)
-        } else if(currentToggle == 3) {
-            setVoltage(0)
-        }
-    }, [currentToggle, enabled, thermalSensorSize])
+
 
     return (
         <div>

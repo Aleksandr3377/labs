@@ -21,33 +21,38 @@ export const ThermoSensor = () => {
         if (!enabled || currentToggle != 1) {
             setButtonState(false)
         }
-    }, [enabled, currentToggle, buttonState])
+    }, [enabled, currentToggle, buttonState, clear])
 
     useEffect(() => {
         let intervalId: ReturnType<typeof setInterval> | undefined
 
         if (buttonState) {
             intervalId = setInterval(() => {
-                setTemperature(temperature => temperature + Math.floor(Math.random() * 2) + 1);
+                setTemperature(prev => prev + Math.floor(Math.random() * 2) + 1);
             }, 1000)
         }
 
         return () => {
             if (intervalId) clearInterval(intervalId)
         }
-    }, [buttonState])
+    }, [buttonState]) // Зависим только от состояния кнопки
 
     useEffect(() => {
         if (temperature >= 55) {
             setButtonState(false)
         } else if (temperature >= 30) {
-            const currentVoltage = temperature * 1.25
+            const noise = (Math.random() - 0.5);
+            const currentVoltage = temperature * 1.25 + noise;
+
+            // Вызываем функции напрямую, не добавляя их в []
             setVoltage(currentVoltage)
             addPoint(`${temperature}:${currentVoltage}`, {
                 x: parseFloat(temperature.toFixed(1)), y: currentVoltage
             })
         }
-    }, [temperature])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [temperature]) // Срабатывает только при изменении температуры
+
 
     return (
         <div className={styles.wrapper}>
@@ -80,8 +85,14 @@ export const ThermoSensor = () => {
                     <button
                         className={styles.button}
                         onClick={() => {
-                            if (temperature == 18) {
-                                setButtonState((value) => !value)
+                            if (!buttonState) {
+                                // Если процесс завершен (температура >= 55), сбрасываем её для нового цикла
+                                if (temperature >= 55) {
+                                    setTemperature(18);
+                                }
+                                setButtonState(true);
+                            } else {
+                                setButtonState(false);
                             }
                         }}>
                         {buttonState ? t("waterHeating.stop") : t("waterHeating.start")}

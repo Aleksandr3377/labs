@@ -1,4 +1,3 @@
-// @ts-ignore
 import styles from "./Main.module.scss";
 import { Circles } from "../components/circles/Circles.tsx";
 import { Apparate } from "../components/apparate/Apparate.tsx";
@@ -48,7 +47,7 @@ export const Main = () => {
                 <Chart
                   label="Тензодатчик"
                   type="WEIGHT"
-                  xAxisLabel={t("table.weight")}
+                  xAxisLabel={t("chart.weight")}
                 />
                 <Table type="WEIGHT" label={t("table.weight")} />
               </>
@@ -60,7 +59,7 @@ export const Main = () => {
                 <Chart
                   label="Термодатчик"
                   type="THERMOSENSOR"
-                  xAxisLabel={t("table.temperature")}
+                  xAxisLabel={t("chart.temperature")}
                 />
                 <Table type="THERMOSENSOR" label={t("table.temperature")} />
               </>
@@ -72,7 +71,7 @@ export const Main = () => {
                 <Chart
                   label="Фоторезистор"
                   type="PHOTORESISTOR"
-                  xAxisLabel={t("table.square")}
+                  xAxisLabel={t("chart.square")}
                 />
                 <Table type="PHOTORESISTOR" label={t("table.square")} />
               </>
