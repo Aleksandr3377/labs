@@ -1,65 +1,97 @@
-import { useEffect } from 'react';
-import styles from './Circles.module.scss';
-import { ThermalSensorSize, useApparateContext } from '../apparate';
-import {useTranslation} from "react-i18next";
-// import formatters from "chart.js/dist/core/core.ticks";
-// import values = formatters.values;
+import React, { useEffect, useMemo, useState } from 'react'
+import styles from './Circles.module.scss'
+import { ThermalSensorSize, useApparateContext } from '../apparate'
+import { useTranslation } from 'react-i18next'
 
-type ThermalSensorValue = {
-    s: number,
+type CircleOptionId = 'SMALL' | 'MEDIUM' | 'LARGE' | 'X'
+
+type CircleOption = {
+    id: CircleOptionId
+    label: string
+    size: ThermalSensorSize | null
     voltage: number
 }
 
-const thermalSensorValues = new Map<ThermalSensorSize, ThermalSensorValue>([
-    ['LARGE', {s: 491, voltage: Math.floor(Math.random() * 5) + 53 }],
-    ['MEDIUM', {s: 380, voltage: Math.floor(Math.random() * 10) + 41 }],
-    ['SMALL', {s: 177, voltage: Math.floor(Math.random() * 9) + 32 }],
-])
+const OPTIONS: CircleOption[] = [
+    { id: 'SMALL',  label: '177мм²', size: 'SMALL',  voltage: 60 },
+    { id: 'MEDIUM', label: '380мм²', size: 'MEDIUM', voltage: 31 },
+    { id: 'LARGE',  label: '491мм²', size: 'LARGE',  voltage: 26 },
+    { id: 'X',      label: 'X',      size: null,     voltage: 43 },
+]
 
-export const Circles = () => {
-    const { setThermalSensorSize, setVoltage, thermalSensorSize, currentToggle, enabled } = useApparateContext()
+export const Circles: React.FC = () => {
     const { t } = useTranslation()
+    const { setThermalSensorSize, setVoltage, thermalSensorSize, currentToggle, enabled } = useApparateContext()
 
-    const handleButtonClick = (size: ThermalSensorSize) => {
-        setThermalSensorSize(size)
-        if(currentToggle == 3 && enabled) {
-            const value = thermalSensorValues.get(size)!
-            setVoltage(value.voltage)
-        }
-    };
+    const [selectedId, setSelectedId] = useState<CircleOptionId | null>(null)
+
+
+    const isDisplayActive = enabled && currentToggle === 3
+
+
+    const currentVoltage = useMemo(() => {
+        if (selectedId === null) return 100
+        const opt = OPTIONS.find(o => o.id === selectedId)
+        return opt ? opt.voltage : 100
+    }, [selectedId])
+
+    const displayVoltage = isDisplayActive ? currentVoltage : 0
+
+    const handleClick = (id: CircleOptionId) => {
+        setSelectedId(prev => (prev === id ? null : id))
+
+        const opt = OPTIONS.find(o => o.id === id)!
+        setThermalSensorSize(opt.size)
+    }
+
 
     useEffect(() => {
-        if(thermalSensorSize){
-            handleButtonClick(thermalSensorSize)
-        } else if(currentToggle == 3) {
-            setVoltage(0)
+        if (!thermalSensorSize) {
+            return
         }
-    }, [currentToggle, enabled, thermalSensorSize])
+
+        const match = OPTIONS.find(o => o.size === thermalSensorSize)?.id ?? null
+        if (match && match !== selectedId) setSelectedId(match)
+    }, [thermalSensorSize, selectedId])
+
+    useEffect(() => {
+        setVoltage(displayVoltage)
+    }, [displayVoltage, setVoltage])
 
     return (
         <div>
-            <h1 className={styles.title}>{t("photoresistorTitle.title")}</h1>
+            <h1 className={styles.title}>{t('photoresistorTitle.title')}</h1>
 
             <div className={styles.wrapper}>
-                <button
-                    className={styles.circleSmall}
-                    onClick={() => handleButtonClick('SMALL')}
-                >
-                    177мм<sup>2</sup>
-                </button>
-                <button
-                    className={styles.circleMedium}
-                    onClick={() => handleButtonClick('MEDIUM')}
-                >
-                    380мм<sup>2</sup>
-                </button>
-                <button
-                    className={styles.circleBig}
-                    onClick={() => handleButtonClick('LARGE')}
-                >
-                    491мм<sup>2</sup>
-                </button>
+                {OPTIONS.map(opt => (
+                    <button
+                        key={opt.id}
+                        type="button"
+                        className={`${getCircleClass(styles, opt.id)} ${selectedId === opt.id ? styles.active : ''}`}
+                        onClick={() => handleClick(opt.id)}
+                    >
+                        {opt.id === 'X' ? (
+                            opt.label
+                        ) : (
+                            <>
+                                {opt.label.replace('²', '')}
+                                <sup>2</sup>
+                            </>
+                        )}
+                    </button>
+                ))}
+            </div>
+
+            <div className={styles.voltageBox}>
+                Напруга: {displayVoltage} В
             </div>
         </div>
-    );
-};
+    )
+}
+
+function getCircleClass(styles: any, id: CircleOptionId) {
+    if (id === 'SMALL') return styles.circleSmall
+    if (id === 'MEDIUM') return styles.circleMedium
+    if (id === 'LARGE') return styles.circleBig
+    return styles.circleX
+}
