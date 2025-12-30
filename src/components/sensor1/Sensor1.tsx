@@ -1,4 +1,3 @@
-// @ts-ignore
 import styles from './Sensor1.module.scss'
 import {SensorPin} from "./SensorPin.tsx";
 

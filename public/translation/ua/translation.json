@@ -31,20 +31,6 @@
   "photoresistorTitle": {
     "title": "Оберіть площу круга"
   },
-  "table": {
-    "square": "Площа, мм²",
-    "temperature": "Температура, °C",
-    "weight": "Вага",
-    "voltage": "Вольтаж",
-    "average": "Середнє"
-  },
-  "chart": {
-    "temperature": "Температура, °C",
-    "weight": "Вага",
-    "voltage": "Вольтаж, V",
-    "regression_line": "Лінія регресії",
-    "square": "Площа, мм²"
-  },
   "waterHeating": {
     "start": "Старт",
     "stop": "Стоп"

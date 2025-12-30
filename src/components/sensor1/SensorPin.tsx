@@ -5,10 +5,10 @@ export const SensorPin = () => {
     const {circleWeights} = useApparateContext()
 
     const weights = {
-        SMALL: 96.5,
-        MEDIUM: 98.2,
-        BIG: 99.2,
-        BIGGEST: 101.5
+        SMALL: "37.5",
+        MEDIUM: "42",
+        BIG: "45.9",
+        BIGGEST: "Mx"
     };
 
     if(circleWeights == null) {
@@ -16,6 +16,8 @@ export const SensorPin = () => {
     }
 
     return (
-        <div className={`${styles.pin} ${styles[`pin--${circleWeights.toLowerCase()}`]}`}>{weights[circleWeights]}</div>
+        <div className={`${styles.pin} ${styles[`pin--${circleWeights.toLowerCase()}`]}`}>
+            {weights[circleWeights]}
+        </div>
     )
 }

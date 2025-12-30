@@ -11,6 +11,7 @@
   display: flex;
   gap: 20px;
   align-items: center;
+  justify-content: center; // Додано для центрування
 }
 
 .circle {
@@ -20,8 +21,26 @@
   background-color: #816666;
   border-radius: 50%;
   border: 1px solid black;
-  text-align: center;
+  display: flex; // Змінено для зручного центрування тексту
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
   padding: 2px;
+  font-family: inherit;
+
+  &:hover {
+    transform: scale(1.05);
+    background-color: #927575;
+  }
+
+  &.active {
+    background-color: #5d4a4a;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: white;
+    border-width: 2px;
+  }
+}
 
   //&::before {
   //  content: '';
@@ -35,7 +54,6 @@
   //  transform: translate(-50%, -50%);
   //  border: 1px solid black;
   //}
-}
 
 .circleSmall {
   @extend .circle;

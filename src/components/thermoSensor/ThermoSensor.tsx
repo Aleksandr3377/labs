@@ -19,7 +19,7 @@ export const ThermoSensor = () => {
         if (!enabled || currentToggle != 1) {
             setButtonState(false)
         }
-    }, [enabled, currentToggle, buttonState, clear])
+    }, [enabled, currentToggle, buttonState])
 
     useEffect(() => {
         let intervalId: ReturnType<typeof setInterval> | undefined

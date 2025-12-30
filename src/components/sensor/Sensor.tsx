@@ -1,4 +1,3 @@
-// @ts-ignore
 import styles from './Sensor.module.scss'
 
 interface Props {
