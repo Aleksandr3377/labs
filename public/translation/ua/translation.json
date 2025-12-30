@@ -18,7 +18,7 @@
     "sensorSelection": "Вибір датчика"
   },
   "connectModel": {
-    "title": "Під'єднати макет до мережі",
+    "title": "ON/OFF",
     "off": "Вкл",
     "on": "Викл"
   },

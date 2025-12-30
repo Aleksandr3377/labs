@@ -1,12 +1,9 @@
 import { useEffect } from 'react';
 import styles from './Switch.module.scss';
 import { useApparateContext } from '../apparate';
-import {useTranslation} from "react-i18next";
 
 export const Switch = () => {
     const {enabled, setEnabled, setVoltage} = useApparateContext()
-    const { t } = useTranslation()
-
     useEffect(() => {
         if(!enabled) {
             setVoltage(0)
@@ -15,7 +12,6 @@ export const Switch = () => {
 
     return (
         <div className={styles.wrapper}>
-            <h1 className={styles.title}>{t("connectModel.title")}</h1>
             <input 
                 type="checkbox" 
                 id={styles.highload1} 
@@ -28,7 +24,6 @@ export const Switch = () => {
                         setEnabled(false)
                     }
                 }} />
-            <label htmlFor={styles.highload1} data-onlabel={t("connectModel.on")} data-offlabel={t("connectModel.off")} className={styles.lb1}></label>
         </div>
     );
 }

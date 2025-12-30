@@ -1,4 +1,4 @@
-// ApparateContext.tsx
+
 import React, { createContext, useContext, useState } from "react"
 
 const ThermalSensorSizes = ["SMALL", "MEDIUM", "LARGE"] as const

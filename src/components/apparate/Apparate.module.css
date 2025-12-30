@@ -1,4 +1,5 @@
 .main {
+    position: relative;
     width: 950px;
     height: 400px;
     background: #dedede;
@@ -8,20 +9,42 @@
     justify-content: space-between;
     align-content: space-around;
     padding: 25px;
+    padding-bottom: 40px;
     margin: 50px auto;
     border: 5px solid black;
-  }
-  
-  .title {
+}
+
+
+.title {
     width: fit-content;
     font-size: 50px;
     margin: 0 auto;
   }
-  
+
+.switchBox {
+    position: absolute;
+    right: 25px;
+    bottom: 15px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.switchText {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+
   .sensor {
     height: 150px;
     border: 3px solid black;
     width: calc(32% - 10px);
     margin: 5px;
   }
-  
