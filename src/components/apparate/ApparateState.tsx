@@ -1,11 +1,12 @@
-
 import React, { createContext, useContext, useState } from "react"
 
 const ThermalSensorSizes = ["SMALL", "MEDIUM", "LARGE"] as const
 const CircleSizes = ["SMALL", "MEDIUM", "BIG", "BIGGEST"] as const
+const PhotoresistorApertures = ["SMALL", "MEDIUM", "LARGE", "OPEN"] as const
 
 export type ThermalSensorSize = (typeof ThermalSensorSizes)[number] | null
 export type CircleSize = (typeof CircleSizes)[number] | null
+export type PhotoresistorAperture = (typeof PhotoresistorApertures)[number] | null
 
 export interface ApparateState {
     enabled: boolean
@@ -22,6 +23,9 @@ export interface ApparateState {
 
     circleWeights: CircleSize
     setCircleWeights: React.Dispatch<React.SetStateAction<CircleSize>>
+
+    photoresistorAperture: PhotoresistorAperture
+    setPhotoresistorAperture: React.Dispatch<React.SetStateAction<PhotoresistorAperture>>
 }
 
 const ApparateContext = createContext<ApparateState | null>(null)
@@ -36,6 +40,8 @@ export const ApparateContextProvider = ({ children }: ApparateContextProviderPro
     const [currentToggle, setCurrentToggle] = useState<number>(0)
     const [thermalSensorSize, setThermalSensorSize] = useState<ThermalSensorSize>(null)
     const [circleWeights, setCircleWeights] = useState<CircleSize>(null)
+
+    const [photoresistorAperture, setPhotoresistorAperture] = useState<PhotoresistorAperture>(null)
 
     const value: ApparateState = {
         enabled,
@@ -52,6 +58,9 @@ export const ApparateContextProvider = ({ children }: ApparateContextProviderPro
 
         circleWeights,
         setCircleWeights,
+
+        photoresistorAperture,
+        setPhotoresistorAperture,
     }
 
     return <ApparateContext.Provider value={value}>{children}</ApparateContext.Provider>

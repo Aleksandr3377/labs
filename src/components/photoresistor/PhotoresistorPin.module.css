@@ -1,29 +1,37 @@
 .pin {
     position: absolute;
-    top: 50%; right: 50%;
-    transform: translate(50%,-50%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
     border-radius: 50%;
-    background-color: #919191;
-    align-content: center;
-    flex-wrap: wrap;
-    align-items: stretch;
-    justify-content: center;
+    background-color: #6f6f6f;
     border: 1px solid black;
-    cursor: pointer;
+
+    transition: all 0.2s ease;
 }
 
-.pin.pin--small {
-    height: 65px;
-    width: 65px;
+
+.pin--small {
+    width: 55px;
+    height: 55px;
 }
 
-.pin.pin--medium {
-    height: 75px;
-    width: 75px;
+
+.pin--medium {
+    width: 70px;
+    height: 70px;
 }
 
-.pin.pin--large {
-    height: 85px;
-    width: 85px;
+
+.pin--large {
+    width: 82px;
+    height: 82px;
 }
+
+
+.pin--open {
+    width: 70px;
+    height: 70px;
+}
+

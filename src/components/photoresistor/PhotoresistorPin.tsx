@@ -2,13 +2,11 @@ import { useApparateContext } from '../apparate'
 import styles from './PhotoresistorPin.module.css'
 
 export const PhotoresistorPin = () => {
-    const {thermalSensorSize} = useApparateContext()
+    const { photoresistorAperture } = useApparateContext()
 
-    if(thermalSensorSize == null) {
-        return (<></>)
-    }
+    if (photoresistorAperture == null) return null
 
     return (
-        <div className={`${styles.pin} ${styles[`pin--${thermalSensorSize.toLowerCase()}`]}`} />
+        <div className={`${styles.pin} ${styles[`pin--${photoresistorAperture.toLowerCase()}`]}`} />
     )
 }

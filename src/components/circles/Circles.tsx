@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import styles from './Circles.module.scss'
-import { ThermalSensorSize, useApparateContext } from '../apparate'
+import { useApparateContext, PhotoresistorAperture } from '../apparate'
 import { useTranslation } from 'react-i18next'
 
 type CircleOptionId = 'SMALL' | 'MEDIUM' | 'LARGE' | 'X'
@@ -8,28 +8,33 @@ type CircleOptionId = 'SMALL' | 'MEDIUM' | 'LARGE' | 'X'
 type CircleOption = {
     id: CircleOptionId
     label: string
-    size: ThermalSensorSize | null
+    aperture: PhotoresistorAperture
     voltage: number
 }
 
 const OPTIONS: CircleOption[] = [
-    { id: 'SMALL',  label: '177мм²', size: 'SMALL',  voltage: 60 },
-    { id: 'MEDIUM', label: '380мм²', size: 'MEDIUM', voltage: 31 },
-    { id: 'LARGE',  label: '491мм²', size: 'LARGE',  voltage: 26 },
-    { id: 'X',      label: 'X',      size: null,     voltage: 43 },
+    { id: 'SMALL',  label: '177мм²', aperture: 'SMALL',  voltage: 60 },
+    { id: 'MEDIUM', label: '380мм²', aperture: 'MEDIUM', voltage: 31 },
+    { id: 'LARGE',  label: '491мм²', aperture: 'LARGE',  voltage: 26 },
+    { id: 'X',      label: 'X',      aperture: 'OPEN',   voltage: 43 },
 ]
 
 export const Circles: React.FC = () => {
     const { t } = useTranslation()
-    const { setThermalSensorSize, setVoltage, thermalSensorSize, currentToggle, enabled } = useApparateContext()
+    const {
+        setPhotoresistorAperture,
+        photoresistorAperture,
+        setVoltage,
+        currentToggle,
+        enabled,
+    } = useApparateContext()
 
     const [selectedId, setSelectedId] = useState<CircleOptionId | null>(null)
 
-
     const isDisplayActive = enabled && currentToggle === 3
 
-
     const currentVoltage = useMemo(() => {
+        // ✅ если ничего не выбрано — 100
         if (selectedId === null) return 100
         const opt = OPTIONS.find(o => o.id === selectedId)
         return opt ? opt.voltage : 100
@@ -41,19 +46,18 @@ export const Circles: React.FC = () => {
         setSelectedId(prev => (prev === id ? null : id))
 
         const opt = OPTIONS.find(o => o.id === id)!
-        setThermalSensorSize(opt.size)
+        setPhotoresistorAperture(opt.aperture)
     }
 
-
+    // синхронизация с контекстом (если aperture меняется извне)
     useEffect(() => {
-        if (!thermalSensorSize) {
-            return
-        }
+        if (!photoresistorAperture) return
 
-        const match = OPTIONS.find(o => o.size === thermalSensorSize)?.id ?? null
+        const match = OPTIONS.find(o => o.aperture === photoresistorAperture)?.id ?? null
         if (match && match !== selectedId) setSelectedId(match)
-    }, [thermalSensorSize, selectedId])
+    }, [photoresistorAperture, selectedId])
 
+    // одно место где пишем напряжение в общий вольтметр
     useEffect(() => {
         setVoltage(displayVoltage)
     }, [displayVoltage, setVoltage])
