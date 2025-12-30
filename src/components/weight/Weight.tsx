@@ -1,10 +1,8 @@
 import { useEffect, useCallback } from 'react'; // Додав useCallback
 import styles from './Weight.module.scss';
 import { CircleSize, useApparateContext } from '../apparate';
-import { useChartContext } from '../chart';
 import { useTranslation } from "react-i18next";
 
-// Прибрав unused interface CircleWeight
 
 const weightData = new Map<CircleSize, number>([
     ['SMALL', 96.5],
@@ -21,7 +19,6 @@ const calculateVoltage = (weight: number) => {
 
 export const Weight = () => {
     const { circleWeights, setCircleWeights, enabled, currentToggle, setVoltage } = useApparateContext()
-    const { addPoint, clear } = useChartContext('WEIGHT')
     const { t } = useTranslation()
 
     const handleButtonClick = useCallback((size: CircleSize) => {
@@ -31,26 +28,23 @@ export const Weight = () => {
             const voltage = calculateVoltage(weight);
 
             setVoltage(voltage);
-            // Точка додається ТІЛЬКИ ТУТ - при кліку
-            addPoint(`${weight}-${Date.now()}`, { x: weight, y: voltage });
+
         }
-    }, [currentToggle, enabled, setCircleWeights, setVoltage, addPoint]);
+    }, [currentToggle, enabled, setCircleWeights, setVoltage]);
 
     useEffect(() => {
-        // Очищаємо графік, якщо макет вимкнено
         if (!enabled) {
-            clear();
             setVoltage(0);
             return;
         }
 
-        // Якщо макет увімкнено, але жодна гиря не обрана
+
         if (!circleWeights && currentToggle === 0) {
             setVoltage(0);
         }
 
-        // ВАЖЛИВО: Ми прибрали звідси автоматичне додавання точок!
-    }, [currentToggle, enabled, circleWeights, clear, setVoltage]);
+
+    }, [currentToggle, enabled, circleWeights, setVoltage]);
 
     return (
         <div className={styles.wrapper}>

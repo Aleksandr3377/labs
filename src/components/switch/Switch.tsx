@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-// @ts-ignore
 import styles from './Switch.module.scss';
 import { useApparateContext } from '../apparate';
 import {useTranslation} from "react-i18next";

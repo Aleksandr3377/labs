@@ -1,12 +1,11 @@
 import {useEffect, useRef, useState} from 'react';
 import styles from './ThermoSensor.module.scss'
 import {useApparateContext} from '../apparate';
-import {useChartContext} from '../chart';
+
 import {useTranslation} from "react-i18next";
 
 export const ThermoSensor = () => {
     const {enabled, currentToggle, setVoltage} = useApparateContext()
-    const {addPoint, clear} = useChartContext('THERMOSENSOR')
     const [buttonState, setButtonState] = useState(false)
     const [temperature, setTemperature] = useState(18)
     const indicator = useRef<HTMLDivElement>(null)
@@ -14,7 +13,6 @@ export const ThermoSensor = () => {
 
     useEffect(() => {
         if (!enabled) {
-            clear()
             setTemperature(18)
         }
 
@@ -43,9 +41,6 @@ export const ThermoSensor = () => {
         } else if (temperature >= 30) {
             const currentVoltage = temperature * 1.25
             setVoltage(currentVoltage)
-            addPoint(`${temperature}:${currentVoltage}`, {
-                x: parseFloat(temperature.toFixed(1)), y: currentVoltage
-            })
         }
     }, [temperature])
 

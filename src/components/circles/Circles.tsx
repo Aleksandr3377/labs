@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import styles from './Circles.module.scss';
 import { ThermalSensorSize, useApparateContext } from '../apparate';
-import { useChartContext } from '../chart';
 import {useTranslation} from "react-i18next";
 // import formatters from "chart.js/dist/core/core.ticks";
 // import values = formatters.values;
@@ -19,7 +18,6 @@ const thermalSensorValues = new Map<ThermalSensorSize, ThermalSensorValue>([
 
 export const Circles = () => {
     const { setThermalSensorSize, setVoltage, thermalSensorSize, currentToggle, enabled } = useApparateContext()
-    const { addPoint, clear } = useChartContext('PHOTORESISTOR')
     const { t } = useTranslation()
 
     const handleButtonClick = (size: ThermalSensorSize) => {
@@ -27,15 +25,10 @@ export const Circles = () => {
         if(currentToggle == 3 && enabled) {
             const value = thermalSensorValues.get(size)!
             setVoltage(value.voltage)
-            addPoint(value.s.toString(), { x: value.s, y: value.voltage })
         }
     };
 
     useEffect(() => {
-        if (!enabled) {
-            clear()
-        }
-
         if(thermalSensorSize){
             handleButtonClick(thermalSensorSize)
         } else if(currentToggle == 3) {
