@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styles from './Weight.module.scss';
 import { useApparateContext, CircleSize } from '../apparate';
+import { useTranslation } from "react-i18next";
 
 interface WeightData {
     id: string;
@@ -17,6 +18,7 @@ const WEIGHT_OPTIONS: WeightData[] = [
 ];
 
 const Weight: React.FC = () => {
+    const { t } = useTranslation();
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const apparateContext = useApparateContext();
     const { enabled, currentToggle, setVoltage, setCircleWeights } = apparateContext;
@@ -37,22 +39,24 @@ const Weight: React.FC = () => {
         }, 0);
     }, [selectedIds]);
 
-    const isDisplayActive = enabled && currentToggle === 0;
-    const displayVoltage = isDisplayActive ? currentVoltage : 0;
+    // Визначаємо напругу, яка відображатиметься (0 якщо OFF або інший датчик)
+    const activeVoltage = (enabled && currentToggle === 0) ? currentVoltage : 0;
 
     useEffect(() => {
-        setVoltage(displayVoltage);
+        // Оновлюємо вольтметр
+        setVoltage(activeVoltage);
 
+        // Оновлюємо "млинці" на тензодатчику (останній вибраний)
         const lastWeight = selectedIds.length > 0
             ? WEIGHT_OPTIONS.find(w => w.id === selectedIds[selectedIds.length - 1])
             : null;
 
         setCircleWeights(lastWeight ? lastWeight.circleSize : null);
-    }, [displayVoltage, selectedIds, enabled, currentToggle, setVoltage, setCircleWeights]);
+    }, [activeVoltage, selectedIds, setVoltage, setCircleWeights]);
 
     return (
         <div className={styles.wrapper}>
-            <h2 className={styles.title}>Оберіть вагу тягарця</h2>
+            <h2 className={styles.title}>{t("weight.title")}</h2>
 
             <div className={styles.container}>
                 {WEIGHT_OPTIONS.map((weight) => (
@@ -73,14 +77,14 @@ const Weight: React.FC = () => {
                 fontWeight: 'bold',
                 textAlign: 'center',
                 color: '#333',
-                padding: '10px',
+                padding: '10px 25px',
                 border: '2px solid #816666',
                 borderRadius: '8px',
                 backgroundColor: '#f5f5f5',
                 width: 'fit-content',
                 margin: '30px auto 0'
             }}>
-                Напруга: {displayVoltage} В
+                {t("weight.voltage")}: {activeVoltage} {t("weight.unitV")}
             </div>
         </div>
     );

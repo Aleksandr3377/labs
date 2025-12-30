@@ -21,7 +21,6 @@ export const Apparate = () => {
 
     return (
         <div className={styles.main}>
-
             {/* 🔘 ON / OFF BUTTON */}
             <div className={styles.switchBox}>
                 <button
@@ -30,10 +29,7 @@ export const Apparate = () => {
                 >
                     {enabled ? 'ON' : 'OFF'}
                 </button>
-
-                <span className={styles.switchText}>
-          {t("connectModel.title")}
-        </span>
+                {/* Зайвий напис {t("connectModel.title")} видалено */}
             </div>
 
             <div className={styles.sensor}><Sensor1 text={t("model.strainGauge")} /></div>
@@ -42,7 +38,6 @@ export const Apparate = () => {
             <div className={styles.sensor}><Sensor text={t("model.capacitiveSensor")} /></div>
             <div className={styles.sensor}><Photoresistor /></div>
             <div className={styles.sensor}><RadioBtn /></div>
-
         </div>
     )
 }

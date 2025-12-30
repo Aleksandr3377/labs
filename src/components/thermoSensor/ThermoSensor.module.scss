@@ -1,13 +1,26 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 40px;
+}
+
 .title {
   width: max-content;
   margin: 30px auto;
-}
-
-.wrapper {
-  height: 430px;
+  font-family: 'Times New Roman', serif;
 }
 
 .container {
+  display: flex;
+  align-items: flex-end;
+  gap: 40px;
+  margin-bottom: 30px;
+  min-height: 260px; // Щоб контент не стрибав при появі колби
+}
+
+.potWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,69 +30,126 @@
   height: 200px;
   width: 130px;
   background-color: #ced8e3;
-  opacity: 0.7;
+  opacity: 0.8;
   border: 1px solid #757474;
+  position: relative;
+  overflow: hidden;
 }
 
 .water {
-  position: relative;
-  top: -135px;
-  height: 135px;
-  width: 132px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   background-color: #5fa6f6;
-  z-index: -1;
+  transition: height 1s ease; // Плавна зміна рівня
+}
+
+.coldWaterFlask {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.flask {
+  height: 120px;
+  width: 60px;
+  border: 2px solid #333;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  position: relative;
+  background-color: rgba(255,255,255,0.3);
+  overflow: hidden;
+}
+
+.flaskWater {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #aadeff; // Світліша вода (холодна)
+  transition: height 1s ease;
+}
+
+.addWaterBtn {
+  padding: 5px 10px;
+  background-color: #5fa6f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  &:hover { background-color: #4a90e2; }
 }
 
 .stove {
-  position: relative;
-  top: -310px;
   width: 160px;
   height: 50px;
   background-color: #5e5e5e;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
 .button {
-  position: relative;
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   background-color: red;
+  border: 2px solid #333;
   border-radius: 50%;
   font-size: 10px;
-}
-
-.thermometer {
-  position: relative;
-  top: -300px;
-  left: 200px;
-  height: 175px;
-  width: 80px;
-  background-color: #9b9b9b;
-}
-
-.scaleWrapper {
-  position: relative;
-  left: 50px;
-  top: -140px;
-  height: 140px;
-  width: 4px;
-  background-color: #4b4747;
+  font-weight: bold;
+  cursor: pointer;
   display: flex;
-  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-transform: uppercase;
+
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
-.scale {
-  position: relative;
-  width: 4px;
-  background-color: #ff0000;
-  z-index: 1;
+// ОНОВЛЕНИЙ ВУЗЬКИЙ ТЕРМОМЕТР
+.thermometer {
+  height: 250px;
+  width: 60px; // Зменшили ширину всього блоку
+  background-color: #9b9b9b;
+  border: 3px solid #333;
+  display: flex;
+  padding: 10px 5px;
+  border-radius: 4px;
 }
 
 .degrees {
   display: flex;
   flex-direction: column-reverse;
-  padding-top: 20px;
-  padding-left: 10px;
+  justify-content: space-between;
+  font-size: 10px; // Трохи менший шрифт для вузької версії
+  font-weight: bold;
+  height: 100%;
+  width: 25px;
+  text-align: right;
+  padding-right: 4px;
+  color: #222;
+}
+
+.scaleWrapper {
+  width: 12px; // Вузький стовпчик
+  background-color: #4b4747;
+  display: flex;
+  flex-direction: column-reverse;
+  border: 1px solid #000;
+  margin: 5px auto;
+}
+
+.scale {
+  width: 100%;
+  background-color: #ff0000;
+  transition: height 0.5s ease;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }

@@ -1,98 +1,130 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import styles from './ThermoSensor.module.scss'
-import {useApparateContext} from '../apparate';
-
-import {useTranslation} from "react-i18next";
+import { useApparateContext } from '../apparate';
+import { useTranslation } from "react-i18next";
 
 export const ThermoSensor = () => {
-    const {enabled, currentToggle, setVoltage} = useApparateContext()
-    const [buttonState, setButtonState] = useState(false)
-    const [temperature, setTemperature] = useState(18)
-    const indicator = useRef<HTMLDivElement>(null)
+    const { enabled, currentToggle, setVoltage } = useApparateContext()
     const { t } = useTranslation()
 
-    useEffect(() => {
-        if (!enabled) {
-            setTemperature(18)
-        }
+    const [buttonState, setButtonState] = useState(false);
+    const [temperature, setTemperature] = useState(25);
+    const [isWaterAdded, setIsWaterAdded] = useState(false);
+    const [flaskWaterLevel, setFlaskWaterLevel] = useState(80);
 
-        if (!enabled || currentToggle != 1) {
-            setButtonState(false)
+    const currentVoltage = useMemo(() => {
+        if (isWaterAdded) return 17;
+        return temperature - 30;
+    }, [temperature, isWaterAdded]);
+
+    const isDisplayActive = enabled && currentToggle === 1;
+    const displayVoltage = isDisplayActive ? currentVoltage : 0;
+
+    useEffect(() => {
+        if (!enabled || currentToggle !== 1) {
+            setButtonState(false);
+            setTemperature(25);
+            setIsWaterAdded(false);
+            setFlaskWaterLevel(80);
         }
-    }, [enabled, currentToggle, buttonState])
+    }, [enabled, currentToggle]);
 
     useEffect(() => {
         let intervalId: ReturnType<typeof setInterval> | undefined
-
-        if (buttonState) {
+        if (buttonState && enabled && !isWaterAdded) {
             intervalId = setInterval(() => {
-                setTemperature(prev => prev + Math.floor(Math.random() * 2) + 1);
-            }, 1000)
+                setTemperature(prev => {
+                    if (prev >= 55) {
+                        setButtonState(false);
+                        return prev;
+                    }
+                    return prev + 5;
+                });
+            }, 5000);
         }
-
-        return () => {
-            if (intervalId) clearInterval(intervalId)
-        }
-    }, [buttonState]) // Зависим только от состояния кнопки
+        return () => { if (intervalId) clearInterval(intervalId) }
+    }, [buttonState, enabled, isWaterAdded]);
 
     useEffect(() => {
-        if (temperature >= 55) {
-            setButtonState(false)
-        } else if (temperature >= 30) {
-            const noise = (Math.random() - 0.5);
-            const currentVoltage = temperature * 1.25 + noise;
+        setVoltage(displayVoltage);
+    }, [displayVoltage, setVoltage]);
 
-            // Вызываем функции напрямую, не добавляя их в []
-            setVoltage(currentVoltage)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [temperature]) // Срабатывает только при изменении температуры
+    const handleAddWater = () => {
+        setFlaskWaterLevel(0);
+        setTimeout(() => {
+            setIsWaterAdded(true);
+        }, 500);
+    };
 
+    const scaleMarks = Array.from({ length: 15 }, (_, i) => i * 5);
 
     return (
         <div className={styles.wrapper}>
             <h1 className={styles.title}>{t("thermosensorTitle.title")}</h1>
 
             <div className={styles.container}>
-                <div className={styles.pot}></div>
-                <div className={styles.water}></div>
-
-                <div className={styles.thermometer}>
-                    <div className={styles.degrees}>
-                        <div>0</div>
-                        <div>10</div>
-                        <div>20</div>
-                        <div>30</div>
-                        <div>40</div>
-                        <div>50</div>
-                        <div>60</div>
-                        <div>70</div>
-                    </div>
-                    <div className={styles.scaleWrapper}>
+                <div className={styles.potWrapper}>
+                    <div className={styles.pot}>
                         <div
-                            className={styles.scale}
-                            ref={indicator}
-                            style={{height: `${temperature * 2.22}px`}}/>
+                            className={styles.water}
+                            style={{ height: isWaterAdded ? '90%' : '60%' }}
+                        />
+                    </div>
+                    <div className={styles.stove}>
+                        <button
+                            className={styles.button}
+                            disabled={isWaterAdded}
+                            onClick={() => {
+                                if (temperature >= 55) setTemperature(25);
+                                setButtonState(!buttonState);
+                            }}>
+                            {buttonState ? t("waterHeating.stop") : t("waterHeating.start")}
+                        </button>
                     </div>
                 </div>
 
-                <div className={styles.stove}>
-                    <button
-                        className={styles.button}
-                        onClick={() => {
-                            if (!buttonState) {
-                                // Если процесс завершен (температура >= 55), сбрасываем её для нового цикла
-                                if (temperature >= 55) {
-                                    setTemperature(18);
-                                }
-                                setButtonState(true);
-                            } else {
-                                setButtonState(false);
-                            }
-                        }}>
-                        {buttonState ? t("waterHeating.stop") : t("waterHeating.start")}
-                    </button>
-                </div>
+                {!isWaterAdded && (
+                    <div className={styles.thermometer}>
+                        <div className={styles.degrees}>
+                            {scaleMarks.map(mark => <div key={mark}>{mark}</div>)}
+                        </div>
+                        <div className={styles.scaleWrapper}>
+                            <div
+                                className={styles.scale}
+                                style={{ height: `${(temperature / 70) * 100}%` }}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {temperature >= 55 && !isWaterAdded && (
+                    <div className={styles.coldWaterFlask}>
+                        <div className={styles.flask}>
+                            <div
+                                className={styles.flaskWater}
+                                style={{ height: `${flaskWaterLevel}%` }}
+                            />
+                        </div>
+                        <button className={styles.addWaterBtn} onClick={handleAddWater}>
+                            {t("waterHeating.addColdWater")}
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            <div style={{
+                marginTop: '10px',
+                fontSize: '24px',
+                fontWeight: 'bold',
+                textAlign: 'center',
+                color: '#333',
+                padding: '10px 25px',
+                border: '2px solid #5fa6f6',
+                borderRadius: '8px',
+                backgroundColor: '#f5f5f5',
+                width: 'fit-content'
+            }}>
+                {t("waterHeating.voltage")}: {displayVoltage} {t("waterHeating.unitV")}
             </div>
         </div>
     );
