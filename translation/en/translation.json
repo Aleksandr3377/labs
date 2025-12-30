@@ -22,8 +22,10 @@
     "off": "On",
     "on": "Off"
   },
-  "weightTitle": {
-    "title": "Choose the weight"
+  "weight": {
+    "title": "Choose the weight",
+    "voltage": "Voltage",
+    "unitV": "V"
   },
   "thermosensorTitle": {
     "title": "Water heating"
@@ -33,6 +35,9 @@
   },
   "waterHeating": {
     "start": "Start",
-    "stop": "Stop"
+    "stop": "Stop",
+    "voltage": "Voltage",
+    "addColdWater": "Add cold water",
+    "unitV": "V"
   }
 }

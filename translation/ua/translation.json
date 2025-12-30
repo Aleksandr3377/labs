@@ -22,8 +22,10 @@
     "off": "Вкл",
     "on": "Викл"
   },
-  "weightTitle": {
-    "title": "Оберіть вагу тягарця"
+  "weight": {
+    "title": "Оберіть вагу тягарця",
+    "voltage": "Напруга",
+    "unitV": "В"
   },
   "thermosensorTitle": {
     "title": "Підігрів води"
@@ -33,6 +35,9 @@
   },
   "waterHeating": {
     "start": "Старт",
-    "stop": "Стоп"
+    "stop": "Стоп",
+    "voltage": "Напруга",
+    "addColdWater": "Долити холодної води",
+    "unitV": "В"
   }
 }
