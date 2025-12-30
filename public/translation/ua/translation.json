@@ -18,7 +18,7 @@
     "sensorSelection": "Вибір датчика"
   },
   "connectModel": {
-    "title": "ON/OFF",
+    "title": "",
     "off": "Вкл",
     "on": "Викл"
   },
