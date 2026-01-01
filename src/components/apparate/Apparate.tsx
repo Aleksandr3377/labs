@@ -9,7 +9,8 @@ import { useTranslation } from "react-i18next"
 
 export const Apparate = () => {
     const { t } = useTranslation()
-    const { enabled, setEnabled, setVoltage } = useApparateContext()
+    const { enabled, setEnabled, setVoltage, currentToggle } = useApparateContext()
+
 
     const toggle = () => {
         setEnabled(prev => {
@@ -32,11 +33,25 @@ export const Apparate = () => {
                 {/* Зайвий напис {t("connectModel.title")} видалено */}
             </div>
 
-            <div className={styles.sensor}><Sensor1 text={t("model.strainGauge")} /></div>
-            <div className={styles.sensor}><Sensor text={t("model.thermoSensor")} /></div>
-            <div className={styles.sensor}><Voltmeter /></div>
-            <div className={styles.sensor}><Sensor text={t("model.capacitiveSensor")} /></div>
-            <div className={styles.sensor}><Photoresistor /></div>
+            <div className={styles.sensor}>
+                <div className={`${styles.cornerLamp} ${enabled && currentToggle === 0 ? styles.cornerLampActive : ""}`} />
+                <Sensor1 text={t("model.strainGauge")} />
+            </div>
+            <div className={styles.sensor}>
+                <div className={`${styles.cornerLamp} ${enabled && currentToggle === 1 ? styles.cornerLampActive : ""}`} />
+                <Sensor text={t("model.thermoSensor")} />
+            </div>
+            <div className={styles.sensor}>
+                <Voltmeter />
+            </div>
+            <div className={styles.sensor}>
+                <div className={`${styles.cornerLamp} ${enabled && currentToggle === 2 ? styles.cornerLampActive : ""}`} />
+                <Sensor text={t("model.capacitiveSensor")} />
+            </div>
+            <div className={styles.sensor}>
+                <div className={`${styles.cornerLamp} ${enabled && currentToggle === 3 ? styles.cornerLampActive : ""}`} />
+                <Photoresistor />
+            </div>
             <div className={styles.sensor}><RadioBtn /></div>
         </div>
     )

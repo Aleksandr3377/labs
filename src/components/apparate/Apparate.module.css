@@ -10,7 +10,7 @@
     align-content: space-around;
     padding: 25px;
     padding-bottom: 40px;
-    margin: 50px auto;
+    margin: 20px auto;
     border: 5px solid black;
 }
 
@@ -25,6 +25,7 @@
     position: absolute;
     right: 25px;
     bottom: 15px;
+    z-index: 999;
 
     display: flex;
     align-items: center;
@@ -44,6 +45,8 @@
 .powerBtn {
     width: 80px;
     height: 36px;
+    position: relative;
+    z-index: 1000;
 
     border-radius: 6px;
     border: 3px solid black;
@@ -71,9 +74,26 @@
 }
 
 
-  .sensor {
+.sensor {
+    position: relative; /* важно, чтобы лампочка позиционировалась внутри блока */
     height: 150px;
     border: 3px solid black;
     width: calc(32% - 10px);
     margin: 5px;
-  }
+}
+
+.cornerLamp {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 3px solid #191718;
+    background-color: #033000; /* темная (как выключенная) */
+    transition: 0.3s ease-in;
+}
+
+.cornerLampActive {
+    background-color: #32ff37; /* активная (красная) */
+}

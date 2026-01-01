@@ -53,3 +53,8 @@
   left: 10px;
   bottom: 45px;
 }
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

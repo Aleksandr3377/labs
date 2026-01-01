@@ -3,12 +3,12 @@
     "title": "Sensors of medical and biological information"
   },
   "instruction": {
-    "header": "Instructions for use",
-    "paragraph1": "Before starting work, you need to turn on the layout by pressing the button under the layout, changing its state from <Off> to <On>, then we can choose what exactly we need for testing (strain sensor, temperature sensor or photoresistor).",
-    "paragraph2": "To launch the load cell window, we select the number 1 by clicking on the gray rectangular handle in the <Sensor Selection> window of the layout, then select the load cell under the layout and select the weight of the load cell.",
-    "paragraph3": "To launch the thermal sensor window, we select the number 2 by clicking on the gray rectangular handle in the <Sensor Selection> window of the layout, then select the thermal sensor under the layout and click <Start>, wait a few seconds, after which the graph is built.",
-    "paragraph4": "To launch the photoresistor window, we select the number 4 by clicking on the gray rectangular handle in the <Sensor Selection> window of the layout, then select the photoresistor under the layout, select the area of ​​the circle.",
-    "paragraph5": "To reset all results and repeat the experiment, you need to reload the page."
+    "header": "Instructions for Use",
+    "paragraph1": "Before starting, turn on the setup by clicking the power button on the panel and switching its state from <Off> to <On>. After that, you can choose what you want to test (strain gauge, temperature sensor, or photoresistor).",
+    "paragraph2": "To open the strain gauge window, select number 1 by clicking the gray rectangular handle in the <Sensor selection> section of the panel. Then you can work with it by choosing the required weight values.",
+    "paragraph3": "To open the temperature sensor window, select number 2 by clicking the gray rectangular handle in the <Sensor selection> section of the panel. Then, below the panel, press <Start> and wait a few seconds — the temperature will begin to rise.",
+    "paragraph4": "To open the photoresistor window, select number 4 by clicking the gray rectangular handle in the <Sensor selection> section of the panel. Then choose the circle area.",
+    "paragraph5": "To reset all results and repeat the experiment, turn the setup off and on again."
   },
   "model": {
     "strainGauge": "Strain gauge",
@@ -17,15 +17,8 @@
     "photoresistor": "Photoresistor",
     "sensorSelection": "Select sensor"
   },
-  "connectModel": {
-    "title": "Connect the layout to the network",
-    "off": "On",
-    "on": "Off"
-  },
   "weight": {
-    "title": "Choose the weight",
-    "voltage": "Voltage",
-    "unitV": "V"
+    "title": "Choose the weight"
   },
   "thermosensorTitle": {
     "title": "Water heating"
@@ -36,8 +29,6 @@
   "waterHeating": {
     "start": "Start",
     "stop": "Stop",
-    "voltage": "Voltage",
-    "addColdWater": "Add cold water",
-    "unitV": "V"
+    "addColdWater": "Add cold water"
   }
 }

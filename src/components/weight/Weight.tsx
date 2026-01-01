@@ -70,22 +70,6 @@ const Weight: React.FC = () => {
                     </button>
                 ))}
             </div>
-
-            <div style={{
-                marginTop: '30px',
-                fontSize: '24px',
-                fontWeight: 'bold',
-                textAlign: 'center',
-                color: '#333',
-                padding: '10px 25px',
-                border: '2px solid #816666',
-                borderRadius: '8px',
-                backgroundColor: '#f5f5f5',
-                width: 'fit-content',
-                margin: '30px auto 0'
-            }}>
-                {t("weight.voltage")}: {activeVoltage} {t("weight.unitV")}
-            </div>
         </div>
     );
 };

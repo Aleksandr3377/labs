@@ -1,33 +1,58 @@
-import { useEffect, useRef, useState } from 'react'
-import { useApparateContext } from '../apparate'
-import styles from './Voltmeter.module.scss'
+import { useMemo } from "react";
+import { useApparateContext } from "../apparate";
+import styles from "./Voltmeter.module.scss";
+
+const MIN_V = 0;
+const MAX_V = 100;
 
 export const Voltmeter = () => {
-    const {voltage} = useApparateContext()
-    const [previousVoltage, setPreviousVoltage] = useState(0)
-    const indicator = useRef<HTMLDivElement>(null)
+    const { voltage } = useApparateContext();
 
-    useEffect(() => {
-        indicator.current?.animate([
-            { transform: `translateX(${previousVoltage}px)` },
-            { transform: `translateX(${voltage}px)` }
-        ], { duration: 1000 })
-        setTimeout(() => setPreviousVoltage(voltage), 1000)
-    }, [voltage])
+    const value = useMemo(() => Math.round(voltage), [voltage]);
+    const clamped = useMemo(() => Math.max(MIN_V, Math.min(MAX_V, value)), [value]);
+
+    // позиция стрелки: 0..100 (%)
+    const pos = useMemo(() => {
+        // ограничиваем, чтобы стрелка не упиралась в край
+        const safe = Math.max(1, Math.min(99, (clamped / MAX_V) * 100));
+        return `${safe}%`;
+    }, [clamped]);
+
 
     return (
-        <div>
-            <div className={styles.numbers}>
-                <div>100</div>
-                <div>50</div>
-                <div>0</div>
-                <div>50</div>
-                <div>100</div>
-            </div>
+        <div className={styles.meter}>
+            <div className={styles.scaleBox}>
+                {/* цифры каждые 5 */}
+                <div className={styles.labelsRow}>
+                    {Array.from({ length: 11 }, (_, i) => i * 10).map((n) => (
+                        <div key={n} className={styles.label}>{n}</div>
+                    ))}
+                </div>
 
-            <div className={styles.scale}/>
-            <div className={styles.vIndicator} style={{transform: `translateX(${voltage}px)`}} ref={indicator}/>
-            <div className={styles.vLabel}>V</div>
+                <div className={styles.ticksRow}>
+                    {Array.from({ length: 101 }, (_, i) => {
+                        const is10 = i % 10 === 0;
+                        const is5 = i % 5 === 0;
+
+                        return (
+                            <div key={i} className={styles.tickCell}>
+                                <div
+                                    className={[
+                                        styles.tick,
+                                        is10 ? styles.tick10 : is5 ? styles.tick5 : styles.tick1,
+                                    ].join(" ")}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* линия шкалы */}
+                <div className={styles.scaleLine} />
+
+                {/* стрелка */}
+                <div className={styles.vIndicator} style={{ left: pos }} />
+            </div>
         </div>
-    )
-}
+    );
+};

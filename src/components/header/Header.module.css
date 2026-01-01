@@ -1,20 +1,28 @@
 .wrapper {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;  /* центрируем по середине */
+    padding: 30px 0;
 }
 
 .title {
-    font-size: 40px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    text-align: center;
+    white-space: nowrap; /* чтобы не переносилось */
 }
 
 .languages {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%); /* ровно по центру по высоте */
     display: flex;
-    width: 70px;
-    justify-content: space-between;
     align-items: center;
-    margin-left: 50px;
-    cursor: pointer;
+    gap: 6px;
 }
 
 .activeLang {

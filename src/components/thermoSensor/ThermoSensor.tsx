@@ -8,7 +8,7 @@ export const ThermoSensor = () => {
     const { t } = useTranslation()
 
     const [buttonState, setButtonState] = useState(false);
-    const [temperature, setTemperature] = useState(25);
+    const [temperature, setTemperature] = useState(30);
     const [isWaterAdded, setIsWaterAdded] = useState(false);
     const [flaskWaterLevel, setFlaskWaterLevel] = useState(80);
 
@@ -23,7 +23,7 @@ export const ThermoSensor = () => {
     useEffect(() => {
         if (!enabled || currentToggle !== 1) {
             setButtonState(false);
-            setTemperature(25);
+            setTemperature(30);
             setIsWaterAdded(false);
             setFlaskWaterLevel(80);
         }
@@ -38,9 +38,9 @@ export const ThermoSensor = () => {
                         setButtonState(false);
                         return prev;
                     }
-                    return prev + 5;
+                    return prev + 1;
                 });
-            }, 5000);
+            }, 3000);
         }
         return () => { if (intervalId) clearInterval(intervalId) }
     }, [buttonState, enabled, isWaterAdded]);
@@ -75,7 +75,7 @@ export const ThermoSensor = () => {
                             className={styles.button}
                             disabled={isWaterAdded}
                             onClick={() => {
-                                if (temperature >= 55) setTemperature(25);
+                                if (temperature >= 55) setTemperature(30);
                                 setButtonState(!buttonState);
                             }}>
                             {buttonState ? t("waterHeating.stop") : t("waterHeating.start")}
@@ -110,21 +110,6 @@ export const ThermoSensor = () => {
                         </button>
                     </div>
                 )}
-            </div>
-
-            <div style={{
-                marginTop: '10px',
-                fontSize: '24px',
-                fontWeight: 'bold',
-                textAlign: 'center',
-                color: '#333',
-                padding: '10px 25px',
-                border: '2px solid #5fa6f6',
-                borderRadius: '8px',
-                backgroundColor: '#f5f5f5',
-                width: 'fit-content'
-            }}>
-                {t("waterHeating.voltage")}: {displayVoltage} {t("waterHeating.unitV")}
             </div>
         </div>
     );

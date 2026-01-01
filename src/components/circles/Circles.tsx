@@ -85,15 +85,11 @@ export const Circles: React.FC = () => {
                     </button>
                 ))}
             </div>
-
-            <div className={styles.voltageBox}>
-                Напруга: {displayVoltage} В
-            </div>
         </div>
     )
 }
 
-function getCircleClass(styles: any, id: CircleOptionId) {
+function getCircleClass(styles: Record<string, string>, id: CircleOptionId) {
     if (id === 'SMALL') return styles.circleSmall
     if (id === 'MEDIUM') return styles.circleMedium
     if (id === 'LARGE') return styles.circleBig
