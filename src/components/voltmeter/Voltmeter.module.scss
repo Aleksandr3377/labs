@@ -7,25 +7,25 @@
 
   display: flex;
   flex-direction: column;
-  justify-content: center;   /* 🔥 по центру по вертикали */
+  justify-content: center;
 }
 
 .scaleBox {
   position: relative;
   width: 100%;
-  height: 80px;   /* если было больше — поставь 80 */
+  height: 80px;
 }
 
-/* цифры */
+
 .labelsRow {
   display: flex;
   justify-content: space-between;
-  padding: 0 2px;        /* было 6px */
+  padding: 0 2px;
   box-sizing: border-box;
 }
 
 .label {
-  font-size: 14px;       /* чуть крупнее */
+  font-size: 14px;
   font-weight: 800;
   line-height: 1;
   white-space: nowrap;
@@ -34,22 +34,21 @@
 .tickMinor { height: 10px; }
 .tickMajor { height: 18px; width: 2px; }
 
-/* линия шкалы — шире */
 .scaleLine {
   position: absolute;
-  left: 2px;             /* было 6px */
-  right: 2px;            /* было 6px */
-  top: 52px;             /* опустили линию чуть ниже */
+  left: 2px;
+  right: 2px;
+  top: 52px;
   height: 4px;
   background: black;
 }
 
-/* стрелка — ставим НА линию и вниз, чтобы не вылезала */
+
 .vIndicator {
   position: absolute;
-  top: 40px;             /* ниже цифр */
-  width: 4px;
-  height: 22px;          /* короче */
+  top: 40px;
+  width: 2px;
+  height: 22px;
   background: red;
   transform: translateX(-50%);
   transition: left 0.6s ease;
@@ -68,26 +67,26 @@
   flex: 1;
   display: flex;
   justify-content: center;
-  align-items: flex-end; /* чтобы все риски "стояли" на одной базе */
+  align-items: flex-end;
 }
 
 .tick {
   background: black;
 }
 
-/* 1 — короткая тонкая */
+
 .tick1 {
   width: 1px;
   height: 10px;
 }
 
-/* 5 — длиннее, но не толстая */
+
 .tick5 {
   width: 1px;
   height: 18px;
 }
 
-/* 10 — длинная и толстая */
+
 .tick10 {
   width: 2px;
   height: 18px;
